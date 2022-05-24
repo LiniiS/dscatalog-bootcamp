@@ -1,6 +1,7 @@
 package com.asantos.dscatalog.services;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.asantos.dscatalog.dto.CategoryDTO;
 import com.asantos.dscatalog.entities.Category;
 import com.asantos.dscatalog.repositories.CategoryRepository;
+import com.asantos.dscatalog.services.exceptions.ResourceNotFoundException;
 
 @Service
 public class CategoryService {
@@ -20,10 +22,18 @@ public class CategoryService {
 	
 	@Transactional(readOnly=true)
 	public List<CategoryDTO> findAll(){
-		List<Category> list =  categoryRepository.findAll();
-		return list.stream().map(x -> new CategoryDTO(x)).collect(Collectors.toList());
+		List<Category> categoryList =  categoryRepository.findAll();
+		return categoryList.stream().map(item -> new CategoryDTO(item)).collect(Collectors.toList());
 		
 		
+	}
+
+	@Transactional(readOnly=true)
+	public CategoryDTO findById(Long id) {
+		Optional<Category> optionalCategory = categoryRepository.findById(id);
+	//	Category category = optionalCategory.get();
+		Category category = optionalCategory.orElseThrow(() -> new ResourceNotFoundException("Resource not found!!!"));
+		return new CategoryDTO(category);
 	}
 
 }
