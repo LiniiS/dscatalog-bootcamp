@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +46,20 @@ public class CategoryService {
 		newCategory = categoryRepository.save(newCategory);
 		
 		return new CategoryDTO(newCategory);
+	}
+
+	@Transactional
+	public CategoryDTO update(Long id, CategoryDTO categoryDto) {
+		try {
+			@SuppressWarnings("deprecation")
+			Category categoryUpdated = categoryRepository.getOne(id);
+			categoryUpdated.setName(categoryDto.getName());
+			categoryUpdated = categoryRepository.save(categoryUpdated);
+			return new CategoryDTO(categoryUpdated);			
+		}catch(EntityNotFoundException e){
+			throw new ResourceNotFoundException("Id not found: " + id);
+		}
+		
 	}
 
 }
