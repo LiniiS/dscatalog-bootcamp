@@ -12,8 +12,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.asantos.dscatalog.dto.CategoryDTO;
 import com.asantos.dscatalog.dto.ProductDTO;
+import com.asantos.dscatalog.entities.Category;
 import com.asantos.dscatalog.entities.Product;
+import com.asantos.dscatalog.repositories.CategoryRepository;
 import com.asantos.dscatalog.repositories.ProductRepository;
 import com.asantos.dscatalog.services.exceptions.DataBaseException;
 import com.asantos.dscatalog.services.exceptions.ResourceNotFoundException;
@@ -23,6 +26,9 @@ public class ProductService {
 
 	@Autowired
 	private ProductRepository productRepository;
+	
+	@Autowired
+	private CategoryRepository categoryRepository;
 
 	@Transactional(readOnly = true)
 	public Page<ProductDTO> findAllPaged(PageRequest pageRequest) {
@@ -42,7 +48,7 @@ public class ProductService {
 	public ProductDTO insert(ProductDTO productDto) {
 
 		Product newProduct = new Product();
-	//	newProduct.setName(productDto.getName());
+		copyDtoToEntity(productDto, newProduct);
 		newProduct = productRepository.save(newProduct);
 
 		return new ProductDTO(newProduct);
@@ -53,7 +59,7 @@ public class ProductService {
 		try {
 			@SuppressWarnings("deprecation")
 			Product productUpdated = productRepository.getOne(id);
-	//		productUpdated.setName(productDto.getName());
+			copyDtoToEntity(productDto, productUpdated);
 			productUpdated = productRepository.save(productUpdated);
 			return new ProductDTO(productUpdated);
 		} catch (EntityNotFoundException e) {
@@ -63,16 +69,29 @@ public class ProductService {
 	}
 
 	public void delete(Long id) {
-		
+
 		try {
-			productRepository.deleteById(id);			
+			productRepository.deleteById(id);
 		} catch (EmptyResultDataAccessException e) {
 			throw new ResourceNotFoundException("Id not found: " + id);
-		}catch (DataIntegrityViolationException e) {
+		} catch (DataIntegrityViolationException e) {
 			throw new DataBaseException("Attention! Data Base Integrity Violation!");
 		}
+
+	}
+	
+	private void copyDtoToEntity(ProductDTO productDto, Product product) {
+		product.setName(productDto.getName());
+		product.setDescription(productDto.getDescription());
+		product.setPrice(productDto.getPrice());
+		product.setImgUrl(productDto.getImgUrl());
+		product.setDate(productDto.getDate());
 		
-		
+		product.getCategories().clear();
+		for(CategoryDTO categoryDto : productDto.getCategories()) {
+			Category category = categoryRepository.getOne(categoryDto.getId());
+			product.getCategories().add(category);
+		}
 	}
 
 }
