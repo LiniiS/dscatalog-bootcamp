@@ -40,13 +40,6 @@ public class Product implements Serializable {
 	public Product() {
 	}
 
-	/*
-	 * public Product(ProdutDTO productDto) { this.name=(productDto.getName());
-	 * this.description=(productDto.getDescription());
-	 * this.price=(productDto.getPrice()); this.imgUrl=(productDto.getImgUrl());
-	 * 
-	 * }
-	 */
 	public Product(String name, String description, Double price, String imgUrl, Instant date) {
 		this.name = name;
 		this.description = description;
@@ -85,6 +78,26 @@ public class Product implements Serializable {
 
 	public Set<Category> getCategories() {
 		return categories;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public void setPrice(Double price) {
+		this.price = price;
+	}
+
+	public void setImgUrl(String imgUrl) {
+		this.imgUrl = imgUrl;
 	}
 
 	@Override

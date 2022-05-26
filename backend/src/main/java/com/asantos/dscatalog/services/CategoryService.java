@@ -22,7 +22,7 @@ import com.asantos.dscatalog.services.exceptions.ResourceNotFoundException;
 public class CategoryService {
 
 	@Autowired
-	CategoryRepository categoryRepository;
+	private CategoryRepository categoryRepository;
 
 	@Transactional(readOnly = true)
 	public Page<CategoryDTO> findAllPaged(PageRequest pageRequest) {
