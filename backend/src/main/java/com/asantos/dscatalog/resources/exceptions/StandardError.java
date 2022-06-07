@@ -10,6 +10,8 @@ public class StandardError implements Serializable {
 	private String error;
 	private String message;
 	private String path;
+	
+	
 
 	public StandardError() {
 	}
