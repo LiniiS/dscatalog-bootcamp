@@ -14,6 +14,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
 
 @Entity
 @Table(name = "tb_product")
@@ -24,9 +26,11 @@ public class Product implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
 	private String name;
 	@Column(columnDefinition = "TEXT")
 	private String description;
+
 	private Double price;
 	private String imgUrl;
 
@@ -47,8 +51,8 @@ public class Product implements Serializable {
 		this.imgUrl = imgUrl;
 		this.date = date;
 	}
-	
-	//verificar esse construtor com ID
+
+	// verificar esse construtor com ID
 	public Product(Long id, String name, String description, Double price, String imgUrl, Instant date) {
 		this.id = id;
 		this.name = name;
@@ -58,7 +62,6 @@ public class Product implements Serializable {
 		this.date = date;
 	}
 
-	
 	public Long getId() {
 		return id;
 	}

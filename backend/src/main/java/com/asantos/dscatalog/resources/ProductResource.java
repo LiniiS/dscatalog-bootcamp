@@ -2,6 +2,8 @@ package com.asantos.dscatalog.resources;
 
 import java.net.URI;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,7 +42,7 @@ public class ProductResource {
 	}
 
 	@PostMapping()
-	public ResponseEntity<ProductDTO> addNewCategory(@RequestBody ProductDTO productDto) {
+	public ResponseEntity<ProductDTO> addNewCategory(@Valid @RequestBody ProductDTO productDto) {
 		productDto = productService.insert(productDto);
 
 		// best practice: return on response headers the path of the new resource
@@ -51,7 +53,7 @@ public class ProductResource {
 	}
 
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<ProductDTO> updateInfoProduct(@PathVariable Long id, @RequestBody ProductDTO productDto) {
+	public ResponseEntity<ProductDTO> updateInfoProduct(@PathVariable Long id, @Valid @RequestBody ProductDTO productDto) {
 		productDto = productService.update(id, productDto);
 		return ResponseEntity.ok().body(productDto);
 	}

@@ -2,6 +2,8 @@ package com.asantos.dscatalog.resources;
 
 import java.net.URI;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,7 +42,7 @@ public class UserResource {
 	}
 
 	@PostMapping()
-	public ResponseEntity<UserDTO> addNewUser(@RequestBody UserInsertDTO userInsertDto) {
+	public ResponseEntity<UserDTO> addNewUser(@Valid @RequestBody UserInsertDTO userInsertDto) {
 		// insertDTO devolve um dto que é armazenado em userDTO
 		UserDTO userDto = userService.insert(userInsertDto);
 
@@ -50,7 +52,7 @@ public class UserResource {
 	}
 
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<UserDTO> updateUserInfo(@PathVariable Long id, @RequestBody UserDTO userDto) {
+	public ResponseEntity<UserDTO> updateUserInfo(@PathVariable Long id, @Valid @RequestBody UserDTO userDto) {
 		userDto = userService.update(id, userDto);
 		return ResponseEntity.ok().body(userDto);
 	}
