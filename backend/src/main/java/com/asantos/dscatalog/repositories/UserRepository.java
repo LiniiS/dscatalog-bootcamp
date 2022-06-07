@@ -7,5 +7,8 @@ import com.asantos.dscatalog.entities.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
+	
+	//find user by Email -> using JPA template
+	User findByEmail(String email);
 
 }
