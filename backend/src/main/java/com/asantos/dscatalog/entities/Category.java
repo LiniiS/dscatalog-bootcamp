@@ -2,12 +2,15 @@ package com.asantos.dscatalog.entities;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -27,6 +30,9 @@ public class Category implements Serializable {
 
 	@Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
 	private Instant updatedAt;
+
+	@ManyToMany(mappedBy = "categories")
+	private Set<Product> products = new HashSet<>();
 
 	public Category() {
 	}
@@ -62,14 +68,18 @@ public class Category implements Serializable {
 
 	@PrePersist
 	public void prePersist() {
-		createdAt = Instant.now();	
+		createdAt = Instant.now();
 	}
-	
+
 	@PreUpdate
 	public void preUpdate() {
 		updatedAt = Instant.now();
 	}
-	
+
+	public Set<Product> getProducts() {
+		return products;
+	}
+
 	// comparação mais rápida - não eh 100%
 	@Override
 	public int hashCode() {
