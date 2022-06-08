@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.asantos.dscatalog.dto.RoleDTO;
 import com.asantos.dscatalog.dto.UserDTO;
 import com.asantos.dscatalog.dto.UserInsertDTO;
+import com.asantos.dscatalog.dto.UserUpdateDTO;
 import com.asantos.dscatalog.entities.Role;
 import com.asantos.dscatalog.entities.User;
 import com.asantos.dscatalog.repositories.RoleRepository;
@@ -64,11 +65,11 @@ public class UserService {
 	}
 
 	@Transactional
-	public UserDTO update(Long id, UserDTO userDto) {
+	public UserDTO update(Long id, UserUpdateDTO userUpdateDto) {
 		try {
 			@SuppressWarnings("deprecation")
 			User userUpdated = userRepository.getOne(id);
-			copyDtoToEntity(userDto, userUpdated);
+			copyDtoToEntity(userUpdateDto, userUpdated);
 			userUpdated = userRepository.save(userUpdated);
 			return new UserDTO(userUpdated);
 		} catch (EntityNotFoundException e) {
