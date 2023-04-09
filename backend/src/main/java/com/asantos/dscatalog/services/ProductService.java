@@ -1,5 +1,7 @@
 package com.asantos.dscatalog.services;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
@@ -8,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,12 +33,30 @@ public class ProductService {
 	@Autowired
 	private CategoryRepository categoryRepository;
 
+
 	@Transactional(readOnly = true)
 	public Page<ProductDTO> findAllPaged(Pageable pageable) {
 		Page<Product> productList = productRepository.findAll(pageable);
 		return productList.map(item -> new ProductDTO(item));
 
 	}
+	
+	
+	@Transactional(readOnly = true)
+	public Page<ProductDTO> findAllOrFiltered(Long categoryId, String name, PageRequest pageRequest) {
+		System.out.println("calling findAllOrFiltered()");
+		
+		//boa prática instanciar o objeto, verificar se ele é nulo pois o campo é opcional na busca
+		//Category category = (categoryId == 0) ? null : categoryRepository.getReferenceById(categoryId);
+		@SuppressWarnings("deprecation")
+		List<Category> categories = (categoryId == 0) ? null : Arrays.asList(categoryRepository.getOne(categoryId));
+		
+		Page<Product> productList = productRepository.findAllOrFiltered(categories, name, pageRequest);
+				
+		return productList.map(item -> new ProductDTO(item));
+
+	}
+		
 
 	@Transactional(readOnly = true)
 	public ProductDTO findById(Long id) {
